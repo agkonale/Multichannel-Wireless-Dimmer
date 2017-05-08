@@ -1,0 +1,491 @@
+<html>
+<head>
+<style>
+
+
+input[type=range] {
+
+  -webkit-appearance: none;
+
+  margin: 10px 0;
+
+  width: 100%;
+
+}
+
+input[type=range]:focus {
+
+  outline: none;
+
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+
+  width: 100%;
+
+  height: 19px;
+
+  cursor: pointer;
+
+  animate: 0.2s;
+
+  box-shadow: 1px 1px 1px #50555C;
+
+  background: #50555C;
+
+  border-radius: 14px;
+
+  border: 0px solid #000000;
+
+}
+
+input[type=range]::-webkit-slider-thumb {
+
+  box-shadow: 0px 0px 0px #000000;
+
+  border: 0px solid #000000;
+
+  height: 18px;
+
+  width: 40px;
+
+  border-radius: 12px;
+
+  background: #529DE1;
+
+  cursor: pointer;
+
+  -webkit-appearance: none;
+
+  margin-top: 0.5px;
+
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+
+  background: #50555C;
+
+}
+
+input[type=range]::-moz-range-track {
+
+  width: 100%;
+
+  height: 19px;
+
+  cursor: pointer;
+
+  animate: 0.2s;
+
+  box-shadow: 1px 1px 1px #50555C;
+
+  background: #50555C;
+
+  border-radius: 14px;
+
+  border: 0px solid #000000;
+
+}
+
+input[type=range]::-moz-range-thumb {
+
+  box-shadow: 0px 0px 0px #000000;
+
+  border: 0px solid #000000;
+
+  height: 18px;
+
+  width: 40px;
+
+  border-radius: 12px;
+
+  background: #529DE1;
+
+  cursor: pointer;
+
+}
+
+input[type=range]::-ms-track {
+
+  width: 100%;
+
+  height: 19px;
+
+  cursor: pointer;
+
+  animate: 0.2s;
+
+  background: transparent;
+
+  border-color: transparent;
+
+  color: transparent;
+
+}
+
+input[type=range]::-ms-fill-lower {
+
+  background: #50555C;
+
+  border: 0px solid #000000;
+
+  border-radius: 28px;
+
+  box-shadow: 1px 1px 1px #50555C;
+
+}
+
+input[type=range]::-ms-fill-upper {
+
+  background: #50555C;
+
+  border: 0px solid #000000;
+
+  border-radius: 28px;
+
+  box-shadow: 1px 1px 1px #50555C;
+
+}
+
+input[type=range]::-ms-thumb {
+
+  box-shadow: 0px 0px 0px #000000;
+
+  border: 0px solid #000000;
+
+  height: 18px;
+
+  width: 40px;
+
+  border-radius: 12px;
+
+  background: #529DE1;
+
+  cursor: pointer;
+
+}
+
+input[type=range]:focus::-ms-fill-lower {
+
+  background: #50555C;
+
+}
+
+input[type=range]:focus::-ms-fill-upper {
+
+  background: #50555C;
+
+}
+
+
+
+input[type="text"] {
+
+    width: 250px;
+
+    height:35px;
+
+}
+
+
+
+input[type="password"] {
+
+    width: 250px;
+
+    height:35px;
+
+}
+
+
+
+
+
+    .onoffswitch {
+
+        position: relative; width: 72px;
+
+        -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+
+    }
+
+
+    .onoffswitch-checkbox {
+
+        display: none;
+
+    }
+
+    .onoffswitch-label {
+
+        display: block; overflow: hidden; cursor: pointer;
+
+        height: 36px; padding: 0; line-height: 36px;
+
+        border: 2px solid #E3E3E3; border-radius: 36px;
+
+        background-color: #FFFFFF;
+
+        transition: background-color 0.3s ease-in;
+
+    }
+
+    .onoffswitch-label:before {
+
+        content: "";
+
+        display: block; width: 36px; margin: 0px;
+
+        background: #FFFFFF;
+
+        position: absolute; top: 0; bottom: 0;
+
+        right: 34px;
+
+        border: 2px solid #E3E3E3; border-radius: 36px;
+
+        transition: all 0.3s ease-in 0s; 
+
+    }
+
+    .onoffswitch-checkbox:checked + .onoffswitch-label {
+
+        background-color: #49E845;
+
+    }
+
+    .onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+
+       border-color: #49E845;
+
+    }
+
+    .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+
+        right: 0px; 
+
+    }
+
+</style>
+
+
+
+<meta name="viewport" content="width=device-width, height=device-height">
+
+
+
+<script>
+
+
+var ipValue;
+var connection;
+
+        
+function ConnectToESP()
+{
+	connection =  new WebSocket(ipValue, ['arduino']);	
+
+	connection.onopen = function () 
+	{
+		//connection.send('Message from Browser to ESP8266' + new Date()); 
+
+		//connection.send('ping');
+		document.getElementById('msgESP').value= "Connected";
+	};
+
+	connection.onerror = function (error) 
+	{
+		console.log('WebSocket Error', error);
+	};
+
+	connection.onmessage = function(evt) {
+			var newValue;
+			
+        	if (evt.data.substring(0,1)=="A") 
+        	{
+        		document.getElementById('myonoffswitch_A').checked = Number(evt.data.substring(evt.data.indexOf("X")+1,evt.data.indexOf("X")+2));
+        		document.getElementById('myonoffswitch_B').checked = Number(evt.data.substring(evt.data.indexOf("Y")+1,evt.data.indexOf("Y")+2));
+        		
+        		document.getElementById('inputSlider_0').value = evt.data.substring(evt.data.indexOf("A")+1,evt.data.indexOf(",")); 
+        		newValue = document.getElementById('inputSlider_0').value;
+        		document.getElementById("outputTextA").innerHTML=Math.round(newValue/128*100);
+        		
+        		document.getElementById('inputSlider_1').value = evt.data.substring(evt.data.indexOf("B")+1,evt.data.indexOf(",",evt.data.indexOf("B")+1));
+        		newValue = document.getElementById('inputSlider_1').value;
+        		document.getElementById("outputTextB").innerHTML=Math.round(newValue/128*100);
+      				
+        	} 
+        	
+        	document.getElementById('msgESP').value = evt.data;    	
+        
+        };
+	
+}
+
+
+function retrieveIP()
+{	 if (localStorage.ipAddress) {
+		document.getElementById("ip").placeholder = localStorage.ipAddress;
+		ipValue = "ws://" + localStorage.ipAddress + ":81/";	
+	 }
+	 
+	 else
+	 {
+	 	localStorage.ipAddress = "";
+	 	document.getElementById("ip").placeholder = "Enter IP address of the Web Socket";
+	 	
+	 }
+	 
+}
+
+function Handle_Switch_0() 
+{
+	var toSend;
+    
+    if(document.getElementById('myonoffswitch_A').checked == 1)
+    {
+		toSend = "ON_0";
+    }
+  
+    else
+    {
+		toSend = "OFF_0";
+	}
+
+	connection.send(toSend); 
+};
+
+
+
+function Handle_Switch_1() 
+{
+	var toSend;
+
+    if(document.getElementById('myonoffswitch_B').checked == 1)
+    {
+		toSend = "ON_1";
+    }
+
+    else
+
+    {
+		toSend = "OFF_1";
+	}
+
+	connection.send(toSend); 
+};
+
+
+
+function mod()
+{
+	var text = document.getElementById('ip').value;
+	ipValue = "ws://" + text + "/81";	
+	localStorage.ipAddress = text;
+}	
+
+
+
+function Send_SSID()
+{
+
+	var text = document.getElementById('ssid').value;
+
+	connection.send("s"+text);
+
+}
+
+
+
+function Send_pswd()
+{
+	var text = document.getElementById('pswd').value;
+	connection.send("p"+text);
+}
+
+
+
+
+function showValueA(newValue)
+{
+	document.getElementById("outputTextA").innerHTML=Math.round(newValue/128*100);
+	connection.send("a"+newValue);   
+}	
+
+ 
+
+function showValueB(newValue)
+{
+	document.getElementById("outputTextB").innerHTML=Math.round(newValue/128*100);
+	connection.send("b"+newValue);
+}
+
+</script>
+
+</head>
+
+<body style="height=100% width=100%"  onload="retrieveIP()">
+
+<center>
+
+<h2 style="color:grey;font-family:verdana;">
+
+MULTICHANNEL DIMMER </h2>
+
+<br>
+<input type="text"  id="ip"  onchange="mod()">
+<br><br>
+
+<button id="connectButton" onclick = "ConnectToESP()"> Connect  </button>
+
+<br><br>
+
+<input type="text"  placeholder="Enter Network SSID" id="ssid" onchange="Send_SSID()">
+
+
+<input type="password" placeholder="Enter Password" id="pswd" onchange="Send_pswd()">
+
+<br>
+
+<h3 style="color:grey;font-family:verdana;"> Channel 0 </h3>
+
+<input type="range" id= "inputSlider_0" min="0" max="120" value="0" step="1" onmouseup="showValueA(this.value)" /> 
+
+<!-- ontouchend for touch devices --> 
+
+<br><span id="outputTextA">0</span><p></p>
+
+
+<div class="onoffswitch">
+
+<input type="checkbox"  name="onoffswitch" onchange="Handle_Switch_0()" class="onoffswitch-checkbox" id="myonoffswitch_A" >
+
+<label class="onoffswitch-label" for="myonoffswitch_A"></label>
+
+</div>
+
+
+
+<br><br>
+
+<h3 style="color:grey;font-family:verdana;"> Channel 1 </h3>
+
+<input type="range" id= "inputSlider_1" min="0" max="120" value="0" step="1" onmouseup="showValueB(this.value)" />      
+
+<br><span id="outputTextB">0</span><p></p>
+
+<div class="onoffswitch">
+
+<input type="checkbox" name="onoffswitch" onchange="Handle_Switch_1()" class="onoffswitch-checkbox" id="myonoffswitch_B" >
+
+<label class="onoffswitch-label" for="myonoffswitch_B"></label>
+
+</div>
+<br><br>
+
+<label for="text1">DEBUG MSG:</label>
+<input type="text" id="msgESP" value=""/>
+
+</body>
+
+</html> 
